@@ -35,8 +35,18 @@ yet — this is the products page only, as requested.
   the sides, prev/next arrows, PKR price, FRONT / BACK toggle, size pills
   (M / L / XL / 2XL), wide grey Add to Cart button. Add to cart requires a
   size; the bag (top-right) opens a drawer with the total.
-- **Below the rail:** trust strip (280–320 GSM brushed fleece, COD, delivery
-  across Pakistan, 7-day exchange), product spec and a size guide.
+- **Below the rail:** "Try the Look." — shop-the-look section from the
+  velvetica.studio "Runway" reel (4 Nov 2026). The reel would not play past
+  its first frame, so only that frame was reproduced: pale lavender
+  background, bold heading, three-trouser hero (centre sharp, sides
+  blurred), "3 PIECES" strip with + buttons, black "Add full look" button
+  (total = sum of the pieces, PKR). Three looks: The City Edit, Night In,
+  The Essentials (Rs 6,597 / Rs 6,597 / Rs 8,897). A subtle Three.js
+  particle field drifts behind the hero and leans toward the pointer; it
+  is disabled entirely under prefers-reduced-motion. Look pieces add to
+  the bag in size L. Then the trust strip (280–320 GSM brushed fleece,
+  COD, delivery across Pakistan, 7-day exchange), product spec and a size
+  guide.
 
 ## Placeholders to replace before launch
 
@@ -59,6 +69,9 @@ yet — this is the products page only, as requested.
 ## Files
 
 - `src/lib/products.ts` — catalogue (products, sizes, PKR formatting)
+- `src/lib/looks.ts` — "Try the Look" outfits + honest totals
 - `src/components/TrouserArt.tsx` — SVG trouser + hanger
 - `src/components/Store.tsx` — rail, detail view, cart drawer
+- `src/components/TryTheLook.tsx` — shop-the-look section
+- `src/components/LookBackground.tsx` — subtle Three.js particle backdrop
 - `src/app/page.tsx` — renders the store

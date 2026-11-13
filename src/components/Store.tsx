@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import TrouserArt, { Hanger } from "@/components/TrouserArt";
+import TryTheLook from "@/components/TryTheLook";
 import { PRODUCTS, SIZES, formatPKR, type Product, type Size } from "@/lib/products";
 
 type CartLine = { product: Product; size: Size; qty: number };
@@ -128,6 +129,39 @@ export default function Store() {
     setTimeout(() => setToast(""), 2600);
   };
 
+  // "Try the Look" adds: look pieces have no size picker, so they go in
+  // as size L (the middle size) and the toast says so.
+  const addLookPiece = (product: Product) => {
+    setCart((c) => {
+      const i = c.findIndex((l) => l.product.id === product.id && l.size === "L");
+      if (i >= 0) {
+        const copy = [...c];
+        copy[i] = { ...copy[i], qty: copy[i].qty + 1 };
+        return copy;
+      }
+      return [...c, { product, size: "L", qty: 1 }];
+    });
+    setToast(`Added — ${product.name}, ${product.colour}, size L`);
+    setTimeout(() => setToast(""), 2600);
+  };
+
+  const addLook = (products: Product[]) => {
+    setCart((c) => {
+      let next = [...c];
+      for (const product of products) {
+        const i = next.findIndex((l) => l.product.id === product.id && l.size === "L");
+        if (i >= 0) {
+          next[i] = { ...next[i], qty: next[i].qty + 1 };
+        } else {
+          next = [...next, { product, size: "L", qty: 1 }];
+        }
+      }
+      return next;
+    });
+    setToast(`Added full look — ${products.length} pieces, size L`);
+    setTimeout(() => setToast(""), 2600);
+  };
+
   // The flying clone: starts on the rail item, flies to the detail spot
   // (zoom-in), and flies back to the rail on close (zoom-out).
   const cloneRect = (d: Detail): Rect => {
@@ -166,7 +200,7 @@ export default function Store() {
         </p>
 
         {/* ---- The rail: one horizontal rail, garments hanging in a row ---- */}
-        <section aria-label="Products" className="mt-6">
+        <section aria-label="Products" id="rail" className="mt-6 scroll-mt-6">
           <div className="relative mx-auto max-w-5xl">
             {/* metal rail */}
             <div className="h-2 rounded-full bg-gradient-to-r from-neutral-300 via-neutral-400 to-neutral-300 shadow-sm" />
@@ -204,6 +238,9 @@ export default function Store() {
             </p>
           </div>
         </section>
+
+        {/* ---- Try the Look: shop-the-look section from the reel ---- */}
+        <TryTheLook onAddPiece={addLookPiece} onAddLook={addLook} />
 
         {/* ---- Trust strip ---- */}
         <section className="mx-auto mt-12 grid max-w-4xl grid-cols-2 gap-3 text-center text-xs text-neutral-600 sm:grid-cols-4">
