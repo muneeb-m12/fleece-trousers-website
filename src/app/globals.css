@@ -38,18 +38,44 @@ body {
   animation: detail-swap 0.35s ease-out both;
 }
 
-/* "Try the Look" hero: the whole trio fades/slides in when the look
-   switches — centre lands sharp, sides blur in. */
-@keyframes look-swap {
-  from { opacity: 0; transform: translateY(10px) scale(0.98); }
-  to { opacity: 1; transform: translateY(0) scale(1); }
+/* "Try the Look" hero: the trio slides HORIZONTALLY when the look
+   switches, like the reel — the incoming trio slides in from the side
+   the user is moving toward, the outgoing trio slides out the other
+   way (~550ms ease). Centre stays sharp, sides stay blurred. */
+@keyframes look-enter-from-right {
+  from { opacity: 0; transform: translateX(48px); }
+  to { opacity: 1; transform: translateX(0); }
 }
-.look-swap {
-  animation: look-swap 0.5s ease-out both;
+@keyframes look-enter-from-left {
+  from { opacity: 0; transform: translateX(-48px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+@keyframes look-exit-to-left {
+  from { opacity: 1; transform: translateX(0); }
+  to { opacity: 0; transform: translateX(-48px); }
+}
+@keyframes look-exit-to-right {
+  from { opacity: 1; transform: translateX(0); }
+  to { opacity: 0; transform: translateX(48px); }
+}
+.look-enter-right {
+  animation: look-enter-from-right 0.55s ease-out both;
+}
+.look-enter-left {
+  animation: look-enter-from-left 0.55s ease-out both;
+}
+.look-exit-left {
+  animation: look-exit-to-left 0.55s ease-out both;
+}
+.look-exit-right {
+  animation: look-exit-to-right 0.55s ease-out both;
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .look-swap {
+  .look-enter-right,
+  .look-enter-left,
+  .look-exit-left,
+  .look-exit-right {
     animation: none;
   }
 }

@@ -1,8 +1,15 @@
 // "Try the Look" — shop-the-look outfits built from the real catalogue.
-// Adapted from the velvetica.studio "Runway" reel (4 Nov 2026): the reel
-// itself would not play past its first frame, so only that frame was
-// reproduced — heading, three-piece hero (centre sharp, sides blurred),
-// "3 PIECES" strip with + buttons, and a black "Add full look" button.
+// Adapted from the velvetica.studio "Runway" reel (4 Nov 2026). The reel
+// would not play in the browser, but Muneeb sent a screen recording
+// (13 Nov, 7.8s) and its frames were read directly:
+//   - Sub-line: "Six looks, styled head to toe. Tap a pin to see the piece."
+//   - Look 1 "The City Edit" (charcoal sweatshirt + baggy blue jeans),
+//     look 2 "Gallery Opening" (olive sweatshirt + brown trousers),
+//     look 3 "Studio Day" (black T-shirt + baggy blue jeans) — then it
+//     loops back. Looks change ~1.2s apart (fast demo pace).
+//   - Only 3 of the 6 look names are ever visible; the other 3 names
+//     here ("Night In", "The Essentials", "Off Duty") are ours, and the
+//     reel's real model photos are replaced by the SVG trouser art.
 // Prices are PKR from the catalogue; the look total is always the sum of
 // its pieces (a Pack of 2 counts at its Rs 3,499 pack price, not 2× singles).
 
@@ -24,6 +31,18 @@ export const LOOKS: Look[] = [
     pieces: ["charcoal", "black", "navy"],
   },
   {
+    id: "gallery-opening",
+    name: "Gallery Opening",
+    blurb: "Olive and chocolate brown around a brown centre — smart, still fleece-soft.",
+    pieces: ["olive", "brown", "charcoal"],
+  },
+  {
+    id: "studio-day",
+    name: "Studio Day",
+    blurb: "Black and navy with grey — the studio uniform, head to toe.",
+    pieces: ["black", "navy", "grey"],
+  },
+  {
     id: "night-in",
     name: "Night In",
     blurb: "Soft greys around a charcoal centre. Made for slow evenings.",
@@ -34,6 +53,12 @@ export const LOOKS: Look[] = [
     name: "The Essentials",
     blurb: "The best-value pack plus navy and grey — four trousers, three pieces.",
     pieces: ["navy", "pack-black-charcoal", "grey"],
+  },
+  {
+    id: "off-duty",
+    name: "Off Duty",
+    blurb: "Olive at the centre, charcoal and brown around it — for days off.",
+    pieces: ["charcoal", "olive", "brown"],
   },
 ];
 
