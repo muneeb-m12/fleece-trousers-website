@@ -15,6 +15,13 @@ npm run build   # production build (verified 13 Nov 2026)
 npm run start
 ```
 
+`dev` and `build` run with `--webpack` on purpose: Next.js 16 defaults to
+Turbopack, whose native SWC binary fails to load on some Windows machines
+("not a valid Win32 application" / "Turbopack is not supported on this
+platform"). Webpack works everywhere. If `npm run dev` still fails on your
+machine, delete `node_modules` and run `npm install` again to re-download
+the Windows SWC binary, then try again.
+
 Next.js 16 + React 19 + Tailwind CSS 4, App Router. No database, no checkout
 yet — this is the products page only, as requested.
 
