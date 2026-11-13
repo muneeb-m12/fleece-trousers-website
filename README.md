@@ -36,17 +36,23 @@ yet — this is the products page only, as requested.
   (M / L / XL / 2XL), wide grey Add to Cart button. Add to cart requires a
   size; the bag (top-right) opens a drawer with the total.
 - **Below the rail:** "Try the Look." — shop-the-look section from the
-  velvetica.studio "Runway" reel (4 Nov 2026). The reel would not play past
-  its first frame, so only that frame was reproduced: pale lavender
-  background, bold heading, three-trouser hero (centre sharp, sides
-  blurred), "3 PIECES" strip with + buttons, black "Add full look" button
-  (total = sum of the pieces, PKR). Three looks: The City Edit, Night In,
-  The Essentials (Rs 6,597 / Rs 6,597 / Rs 8,897). A subtle Three.js
-  particle field drifts behind the hero and leans toward the pointer; it
-  is disabled entirely under prefers-reduced-motion. Look pieces add to
-  the bag in size L. Then the trust strip (280–320 GSM brushed fleece,
-  COD, delivery across Pakistan, 7-day exchange), product spec and a size
-  guide.
+  velvetica.studio "Runway" reel (4 Nov 2026), matched from Muneeb's screen
+  recording of the reel (13 Nov, 7.8s): pale lavender background, bold
+  heading, hero PHOTO per look (three models, centre sharp, sides blurred),
+  six looks — The City Edit, Gallery Opening, Studio Day (the three names
+  visible in the reel) plus Night In, The Essentials, Off Duty — auto-cycling
+  every 3s with a horizontal slide transition, swipe left/right on the hero,
+  small dot indicators under the photo (the reel has no look pills), compact
+  "3 PIECES" strip of small thumbnails with + buttons, black full-width
+  "Add full look" button directly under the strip (total = sum of the
+  pieces, PKR), grey "FLEECE. · Pakistan" pill below it. No particle or
+  WebGL background — the reel's background is clean pale lavender. The
+  hero photos are AI-generated approximations of the reel's look
+  (`public/looks/*.jpg`), not the reel's photos; the pieces strip still
+  uses the SVG trouser thumbnails. Look pieces add to the bag in size L.
+  Auto-advance and the slide are disabled under prefers-reduced-motion.
+  Then the trust strip (280–320 GSM brushed fleece, COD, delivery across
+  Pakistan, 7-day exchange), product spec and a size guide.
 
 ## Placeholders to replace before launch
 
@@ -73,5 +79,5 @@ yet — this is the products page only, as requested.
 - `src/components/TrouserArt.tsx` — SVG trouser + hanger
 - `src/components/Store.tsx` — rail, detail view, cart drawer
 - `src/components/TryTheLook.tsx` — shop-the-look section
-- `src/components/LookBackground.tsx` — subtle Three.js particle backdrop
+- `public/looks/*.jpg` — AI-generated hero photos (three models per look)
 - `src/app/page.tsx` — renders the store

@@ -1,49 +1,41 @@
 // "Try the Look" — the shop-the-look section from the velvetica.studio
-// "Runway" reel, adapted to the fleece catalogue. Mobile-first, on the
-// reel's very pale lavender background:
-//   bold "Try the Look." heading, six looks, three-trouser hero (centre
-//   sharp, sides blurred), thin divider, look label + "3 PIECES" strip
-//   with + buttons, black full-width "Add full look" button, grey store
-//   pill below.
+// "Runway" reel, adapted to the fleece catalogue. Mobile-first and
+// phone-width (max-w ~520px, centred) on the reel's very pale lavender
+// background, like the phone screen in the reel:
+//   bold "Try the Look." heading, hero PHOTO of three models per look
+//   (AI-generated approximations in public/looks/ — same composition as
+//   the reel: centre model sharp, side models blurred — not the reel's
+//   photos), thin divider, look label + "3 PIECES" compact strip with +
+//   buttons, black full-width "Add full look" button, grey store pill.
 // Motion (verified from Muneeb's screen recording of the reel, 13 Nov):
-//   the trio slides HORIZONTALLY — the old centre slides left and blurs
-//   out, the next slides in from the right and sharpens; side models
-//   stay blurred throughout. The reel cycles looks ~1.2s apart (fast
-//   demo pace); here it auto-advances every 3s, which is the usable
-//   store pace. Swiping the hero left/right changes looks, like the reel.
-// The trousers are the same SVG art as the rail (no photos exist yet);
-// prices are PKR from the catalogue and the look total is the sum of
-// its pieces — see src/lib/looks.ts.
+//   the hero photo slides HORIZONTALLY — incoming from the right,
+//   outgoing out to the left; the reel cycles looks ~1.2s apart (fast demo
+//   pace); here it auto-advances every 3s, the usable store pace. Swiping
+//   the hero left/right changes looks. Small dot indicators under the hero
+//   switch looks on tap (the reel has no look pills). No particle or
+//   WebGL background — the reel's background is clean pale lavender.
+// Prices are PKR from the catalogue and the look total is the sum of its
+// pieces — see src/lib/looks.ts.
 
 "use client";
 
 import { useCallback, useEffect, useRef, useState, useSyncExternalStore } from "react";
+import Image from "next/image";
 import TrouserArt from "@/components/TrouserArt";
-import LookBackground from "@/components/LookBackground";
 import { LOOKS, lookProducts, lookTotalLabel, type Look } from "@/lib/looks";
 import { formatPKR, type Product } from "@/lib/products";
 
-/** One trio of trousers: pieces[1] is the hero's centre, [0] and [2] flank it, blurred. */
-function HeroTrio({ look }: { look: Look }) {
-  const pieces = lookProducts(look);
-  const [left, centre, right] = pieces;
-  if (!centre) return null;
+/** Hero photo for one look: 1120×2240 portrait, three models, centre sharp. */
+function HeroPhoto({ look, priority }: { look: Look; priority?: boolean }) {
   return (
-    <>
-      {left && (
-        <div className="w-24 shrink-0 scale-[0.85] opacity-60 blur-[3px] sm:w-32" aria-hidden="true">
-          <TrouserArt product={left} className="h-auto w-full" />
-        </div>
-      )}
-      <div className="w-40 shrink-0 sm:w-56">
-        <TrouserArt product={centre} className="h-auto w-full drop-shadow-md" />
-      </div>
-      {right && (
-        <div className="w-24 shrink-0 scale-[0.85] opacity-60 blur-[3px] sm:w-32" aria-hidden="true">
-          <TrouserArt product={right} className="h-auto w-full" />
-        </div>
-      )}
-    </>
+    <Image
+      src={look.image}
+      width={1120}
+      height={2240}
+      alt={`${look.name} — three models wearing fleece jogger trousers`}
+      className="h-auto w-full"
+      priority={priority}
+    />
   );
 }
 
@@ -102,7 +94,7 @@ export default function TryTheLook({
         setPrevIndex(index);
         setDirection(dir);
         if (exitTimerRef.current) window.clearTimeout(exitTimerRef.current);
-        // Clear the outgoing trio once its ~550ms slide has finished.
+        // Clear the outgoing photo once its ~550ms slide has finished.
         exitTimerRef.current = window.setTimeout(() => setPrevIndex(null), 600);
       }
       setIndex(target);
@@ -158,37 +150,21 @@ export default function TryTheLook({
   return (
     <section
       aria-label="Try the look"
-      className="relative mt-16 overflow-hidden rounded-3xl bg-[#f4f1fb]"
+      className="mx-auto mt-16 w-full max-w-[520px] overflow-hidden rounded-3xl bg-[#f4f1fb]"
       onPointerEnter={pauseAuto}
       onPointerLeave={resumeAuto}
     >
-      <LookBackground />
-      <div className="relative px-5 py-8 sm:px-10 sm:py-12">
-        <h2 className="text-3xl font-extrabold tracking-tight text-neutral-900 sm:text-4xl">Try the Look.</h2>
-        <p className="mt-2 max-w-md text-sm leading-relaxed text-neutral-500">
+      <div className="px-5 py-8 sm:px-8">
+        <h2 className="text-3xl font-extrabold tracking-tight text-neutral-900">Try the Look.</h2>
+        <p className="mt-2 text-sm leading-relaxed text-neutral-500">
           Six looks, styled head to toe. Tap + to add a piece.
         </p>
 
-        {/* look switcher */}
-        <div className="mt-5 flex flex-wrap gap-2" role="group" aria-label="Choose a look">
-          {LOOKS.map((l, i) => (
-            <button
-              key={l.id}
-              onClick={() => goTo(i, i > index ? 1 : -1)}
-              aria-pressed={index === i}
-              className={`rounded-full px-4 py-2 text-xs font-bold uppercase tracking-widest transition ${
-                index === i ? "bg-neutral-900 text-white" : "bg-white text-neutral-700 ring-1 ring-neutral-300"
-              }`}
-            >
-              {l.name}
-            </button>
-          ))}
-        </div>
-
-        {/* hero: centre sharp, sides blurred — slides horizontally on switch,
-            like the reel: incoming from the right, outgoing out to the left. */}
+        {/* hero photo: three models, centre sharp — slides horizontally on
+            switch, like the reel: incoming from the right, outgoing out to
+            the left. */}
         <div
-          className="relative mt-6 touch-pan-y"
+          className="relative mt-6 touch-pan-y overflow-hidden rounded-2xl"
           onTouchStart={onTouchStart}
           onTouchEnd={onTouchEnd}
           role="region"
@@ -198,25 +174,38 @@ export default function TryTheLook({
             <div
               key={`exit-${prevIndex}`}
               aria-hidden="true"
-              className={`pointer-events-none absolute inset-x-0 top-0 flex items-end justify-center gap-1 sm:gap-4 ${
+              className={`pointer-events-none absolute inset-0 ${
                 direction === 1 ? "look-exit-left" : "look-exit-right"
               }`}
             >
-              <HeroTrio look={LOOKS[prevIndex]} />
+              <HeroPhoto look={LOOKS[prevIndex]} />
             </div>
           )}
           <div
             key={`enter-${index}`}
-            className={`flex items-end justify-center gap-1 sm:gap-4 ${
-              sliding ? (direction === 1 ? "look-enter-right" : "look-enter-left") : ""
-            }`}
+            className={sliding ? (direction === 1 ? "look-enter-right" : "look-enter-left") : ""}
           >
-            <HeroTrio look={look} />
+            <HeroPhoto look={look} priority={index === 0} />
           </div>
         </div>
 
+        {/* dot indicators — the reel has no look pills, it just cycles */}
+        <div className="mt-4 flex justify-center gap-2" role="group" aria-label="Choose a look">
+          {LOOKS.map((l, i) => (
+            <button
+              key={l.id}
+              onClick={() => goTo(i, i > index ? 1 : -1)}
+              aria-label={`Show look ${l.name}`}
+              aria-pressed={index === i}
+              className={`h-2 rounded-full transition-all ${
+                index === i ? "w-6 bg-neutral-900" : "w-2 bg-neutral-300 hover:bg-neutral-400"
+              }`}
+            />
+          ))}
+        </div>
+
         {/* thin divider, like the reel */}
-        <hr className="mt-6 border-neutral-300/70" />
+        <hr className="mt-5 border-neutral-300/70" />
 
         {/* look label + piece count */}
         <div className="mt-4 flex items-baseline justify-between gap-3">
@@ -225,33 +214,30 @@ export default function TryTheLook({
         </div>
         <p className="mt-1 text-sm text-neutral-600">{look.blurb}</p>
 
-        {/* product strip: thumbnails with + buttons */}
-        <div className="mt-5 grid grid-cols-3 gap-2 sm:gap-3">
+        {/* compact pieces strip: small thumbnails in a single row with +
+            buttons, like the reel — not big cards */}
+        <div className="mt-4 flex gap-2">
           {pieces.map((p) => (
-            <div key={p.id} className="relative rounded-2xl bg-white p-2 text-center shadow-sm sm:p-3">
+            <div key={p.id} className="relative flex-1 rounded-xl bg-white px-1 pb-2 pt-1 text-center shadow-sm">
               <button
                 onClick={() => onAddPiece(p)}
                 aria-label={`Add ${p.name}, ${p.colour}, ${formatPKR(p.price)} to bag`}
-                className="absolute -right-1.5 -top-1.5 flex h-7 w-7 items-center justify-center rounded-full bg-neutral-900 text-base font-bold leading-none text-white shadow transition hover:scale-110"
+                className="absolute -right-1 -top-1 flex h-6 w-6 items-center justify-center rounded-full bg-neutral-900 text-sm font-bold leading-none text-white shadow transition hover:scale-110"
               >
                 +
               </button>
-              <TrouserArt product={p} className="mx-auto h-20 w-auto sm:h-24" />
-              {p.kind === "pack" && (
-                <span className="mt-1 inline-block rounded-full bg-emerald-100 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wide text-emerald-700">
-                  Pack of 2
-                </span>
-              )}
-              <p className="mt-1 truncate text-xs font-semibold text-neutral-900">{p.colour}</p>
-              <p className="text-xs text-neutral-600">{formatPKR(p.price)}</p>
+              <TrouserArt product={p} className="mx-auto h-14 w-auto" />
+              <p className="mt-0.5 truncate text-[11px] font-semibold text-neutral-900">{p.colour}</p>
+              <p className="text-[11px] text-neutral-600">{formatPKR(p.price)}</p>
             </div>
           ))}
         </div>
 
-        {/* black full-width CTA — total is the sum of the pieces */}
+        {/* black full-width CTA directly under the strip — total is the sum
+            of the pieces */}
         <button
           onClick={() => onAddLook(pieces)}
-          className="mt-6 w-full rounded-full bg-neutral-900 py-4 text-sm font-bold uppercase tracking-[0.15em] text-white transition hover:bg-neutral-800"
+          className="mt-4 w-full rounded-full bg-neutral-900 py-4 text-sm font-bold uppercase tracking-[0.15em] text-white transition hover:bg-neutral-800"
         >
           Add full look — {lookTotalLabel(look)}
         </button>
